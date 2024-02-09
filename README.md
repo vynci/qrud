@@ -1,4 +1,6 @@
-# qrud - an opinionated crud framework for serverless functions
+# Qrud (pre-alpha)
+
+An opinionated CRUD framework made for serverless functions. Aiming to accelerate development by furnishing pre-built methods essential for constructing a robust CRUD API. The ambition is to streamline the development process, empowering developers to focus more on business logic rather than repetitive tasks.
 
 ## Development
 
