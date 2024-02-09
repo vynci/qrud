@@ -1,0 +1,36 @@
+{
+  "name": "qrud",
+  "version": "1.0.12",
+  "main": "index.js",
+  "description": "An opinionated crud framework for serverless functions",
+  "scripts": {
+    "lerna:publish": "lerna publish",
+    "test": "npx jest --coverage",
+    "prebuild": "rm -rf dist",
+    "build": "npx tsc",
+    "build:docs": "npx typedoc --out docs packages/*",
+    "prettier:check": "npx prettier --check packages",
+    "prettier:write": "npx prettier --write packages",
+    "postbuild": "cp package.json dist && cp README.md dist"
+  },
+  "author": "vynci",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^29.2.2",
+    "@types/node": "^18.11.9",
+    "gts": "^3.1.1",
+    "jest": "^29.3.1",
+    "ts-jest": "^29.0.3",
+    "typedoc": "^0.23.21",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "change-case": "^4.1.2",
+    "jwt-decode": "^4.0.0",
+    "knex": "^2.4.2",
+    "knex-aurora-data-api-client": "^1.9.0",
+    "lerna": "^6.4.1",
+    "rds-data": "^1.1.0",
+    "zod": "^3.22.4"
+  }
+}
