@@ -13,6 +13,10 @@
     "prettier:write": "npx prettier --write packages",
     "postbuild": "cp package.json dist && cp README.md dist"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vynci/qrud.git"
+  },
   "author": "vynci",
   "license": "ISC",
   "devDependencies": {
