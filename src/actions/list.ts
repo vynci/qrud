@@ -20,8 +20,6 @@ export const listItems = async (
 
   const query = knex(table);
 
-  console.log("filter", filter);
-
   query
     .where((builder: any) => {
       for (const prop in filter) {
@@ -76,8 +74,6 @@ export const listItems = async (
     .orderBy(order);
 
   let result;
-
-  console.log("query.toString()", query.toString());
 
   if (isCount) result = query.toString();
   else result = await query;
