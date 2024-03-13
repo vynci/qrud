@@ -32,12 +32,20 @@ export const whereBuilder = (filter: any, builder: any) => {
   return _builder;
 };
 
+/**
+ * cleanUpIdentifierArray
+ *
+ * This will remove duplicates on `item.field`
+ *
+ * @param items
+ * @returns
+ */
 export const cleanUpIdentifierArray = (
   items: Array<QrudAuthContextIdentifiers>
 ) => {
   const result = items.filter(
     (value, index, self) =>
-      index === self.findIndex((t) => t.field === t.field && t.value)
+      index === self.findIndex((t) => value.field === t.field && t.value)
   );
 
   return result;

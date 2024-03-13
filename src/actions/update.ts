@@ -16,7 +16,6 @@ export const updateItem = async (
   const knex = db(database);
 
   // [1] Setup Conditions
-
   const tmpConditions = [];
 
   const initialCondition: Array<QrudAuthContextIdentifiers> = [
