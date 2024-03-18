@@ -1,5 +1,5 @@
 import { dotCase } from "change-case";
-import { QrudAuthContextIdentifiers, QrudAuthContext } from "../types";
+import { QrudContextIdentifiers, QrudAuthContext } from "../types";
 
 export const fieldToTableName = (fieldName: string) => {
   let nestTable = dotCase(fieldName).split(".");
@@ -41,7 +41,7 @@ export const whereBuilder = (filter: any, builder: any) => {
  * @returns
  */
 export const cleanUpIdentifierArray = (
-  items: Array<QrudAuthContextIdentifiers>
+  items: Array<QrudContextIdentifiers>
 ) => {
   const result = items.filter(
     (value, index, self) =>

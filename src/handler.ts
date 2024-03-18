@@ -4,7 +4,9 @@ import {
   QrudInput,
   QrudOptions,
   QrudArgs,
-  QrudArgsOptions,
+  QrudDeleteArgs,
+  QrudUpdateArgs,
+  QrudListArgs,
   QrudGQLOptions,
 } from "./types";
 
@@ -43,28 +45,28 @@ export class Qrud {
     return await getItem(table, id, database);
   }
 
-  async list(options: QrudArgsOptions) {
+  async list(options: QrudListArgs) {
     const table: string = this.table;
     const database = this.database || "";
 
     return await listItems(table, options, database);
   }
 
-  async update(args: QrudArgs) {
+  async update(args: QrudUpdateArgs) {
     const table: string = this.table;
     const database = this.database || "";
 
     return await updateItem(table, args, database);
   }
 
-  async delete(args: QrudArgs) {
+  async delete(args: QrudDeleteArgs) {
     const table: string = this.table;
     const database = this.database || "";
 
     return await deleteItem(table, args, database);
   }
 
-  async count(options: QrudArgsOptions) {
+  async count(options: QrudListArgs) {
     const table: string = this.table;
     const database = this.database || "";
 

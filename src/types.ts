@@ -28,16 +28,34 @@ export interface QrudInput {
 
 export interface QrudArgs {
   id?: string;
-  options?: QrudArgsOptions;
+  options?: QrudListArgs;
   payload?: any;
   key?: string;
 }
 
-export interface QrudAuthContext {
-  identifiers: Array<QrudAuthContextIdentifiers>;
+export interface QrudUpdateArgs {
+  id?: string;
+  conditions?: Array<QrudContextIdentifiers>;
+  payload?: any;
 }
 
-export interface QrudAuthContextIdentifiers {
+export interface QrudDeleteArgs {
+  id?: string;
+  conditions?: Array<QrudContextIdentifiers>;
+}
+
+export interface QrudListArgs {
+  filter?: string;
+  limit?: number;
+  offset?: number;
+  order?: string;
+}
+
+export interface QrudAuthContext {
+  identifiers: Array<QrudContextIdentifiers>;
+}
+
+export interface QrudContextIdentifiers {
   value: string;
   field: string;
   operator?: string;
@@ -50,14 +68,4 @@ export interface QrudGQLInput {
 
 export interface QrudGQLInfoInput {
   fieldName: string;
-}
-
-export interface QrudArgsOptions {
-  filter?: string;
-  limit?: number;
-  offset?: number;
-  order?: string;
-  join?: string;
-  joinSelect?: string;
-  joinDistinct?: string;
 }

@@ -1,7 +1,7 @@
 import {
-  QrudArgs,
+  QrudDeleteArgs,
   QrudAuthContext,
-  QrudAuthContextIdentifiers,
+  QrudContextIdentifiers,
 } from "../types";
 import { db } from "../database/knex";
 
@@ -9,7 +9,7 @@ import { cleanUpIdentifierArray } from "../helpers/helper";
 
 export const deleteItem = async (
   table: string,
-  args: QrudArgs,
+  args: QrudDeleteArgs,
   database: string,
   authContext?: QrudAuthContext
 ) => {
@@ -17,12 +17,11 @@ export const deleteItem = async (
     const knex = db(database);
 
     // [1] Setup Conditions
-
     const tmpConditions = [];
 
-    const initialCondition: Array<QrudAuthContextIdentifiers> = [
-      { field: args.key || "id", value: args.id, operator: "=" },
-    ];
+    const initialCondition: Array<QrudContextIdentifiers> = args.id
+      ? [{ field: "id", value: args.id, operator: "=" }]
+      : args.conditions;
 
     if (authContext) tmpConditions.push(authContext.identifiers);
 

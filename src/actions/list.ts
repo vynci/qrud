@@ -1,10 +1,10 @@
-import { QrudArgs, QrudAuthContext, QrudArgsOptions } from "../types";
+import { QrudAuthContext, QrudListArgs } from "../types";
 import { db } from "../database/knex";
 import { createContextPayload } from "../helpers/helper";
 
 export const listItems = async (
   table: string,
-  argsOptions: QrudArgsOptions,
+  argsOptions: QrudListArgs,
   database: string,
   authContext?: QrudAuthContext,
   isCount: boolean = false
