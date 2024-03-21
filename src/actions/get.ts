@@ -3,7 +3,7 @@ import { db } from "../database/knex";
 
 export const getItem = async (
   table: string,
-  argsId: any,
+  argsId: string | number,
   database: string,
   authContext?: QrudAuthContext
 ) => {

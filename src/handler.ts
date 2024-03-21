@@ -1,10 +1,9 @@
 import { dotCase } from "change-case";
-import { z } from "zod";
+
 import {
   QrudGQLInput,
   QrudInput,
   QrudOptions,
-  QrudRawArgs,
   QrudDeleteArgs,
   QrudUpdateArgs,
   QrudListArgs,
@@ -32,61 +31,47 @@ export class Qrud<SchemaType> {
     this.options = options;
   }
 
-  async create(payload: any) {
-    const table: string = this.table;
-    const database = this.database || "";
-
-    return await createItem(table, payload, this.schema, database);
+  async create(payload: SchemaType) {
+    return await createItem<SchemaType>(
+      this.table,
+      payload,
+      this.schema,
+      this.database
+    );
   }
 
   async get(id: string | number) {
-    const table: string = this.table;
-    const database = this.database || "";
-
-    return await getItem(table, id, database);
+    return await getItem(this.table, id, this.database);
   }
 
   async list(options: QrudListArgs<SchemaType>) {
-    const table: string = this.table;
-    const database = this.database || "";
-
-    return await listItems<SchemaType>(table, options, database);
+    return await listItems<SchemaType>(this.table, options, this.database);
   }
 
   async update(args: QrudUpdateArgs) {
-    const table: string = this.table;
-    const database = this.database || "";
-
-    return await updateItem(table, args, database);
+    return await updateItem(this.table, args, this.database);
   }
 
   async delete(args: QrudDeleteArgs) {
-    const table: string = this.table;
-    const database = this.database || "";
-
-    return await deleteItem(table, args, database);
+    return await deleteItem(this.table, args, this.database);
   }
 
   async count(options: QrudListArgs<SchemaType>) {
-    const table: string = this.table;
-    const database = this.database || "";
-
-    return await countItems<SchemaType>(table, options, database);
+    return await countItems<SchemaType>(this.table, options, this.database);
   }
 
-  async raw(args: QrudRawArgs) {
-    const database = this.database || "";
-
-    return rawItem(args, database);
+  async raw(sqlQuery: string) {
+    return rawItem(sqlQuery, this.database);
   }
 
-  async gql(input: QrudGQLInput<SchemaType>, gqlOptions?: QrudGQLOptions) {
+  async appsync(input: QrudGQLInput<SchemaType>, gqlOptions?: QrudGQLOptions) {
     const table: string = this.table;
     const database = this.database || "";
     const action = dotCase(input.info.fieldName).split(".")[0];
-    let args = input.arguments;
 
+    let args = input.arguments;
     let authContext = null;
+    let result;
 
     if (gqlOptions?.precrud) input = await gqlOptions.precrud(input);
 
@@ -94,8 +79,6 @@ export class Qrud<SchemaType> {
 
     if (args?.options?.filter)
       args.options.filter = JSON.parse(args.options.filter as string);
-
-    let result;
 
     switch (action) {
       case "get":

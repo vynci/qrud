@@ -26,7 +26,7 @@ describe("Qrud [Postgres SQL]", () => {
       database: "krono_aurora_pg",
     });
 
-    const listResult = await api.gql(event);
+    const listResult = await api.appsync(event);
 
     console.log("listResult", listResult);
 

@@ -2,9 +2,9 @@ import { QrudAuthContext } from "../types";
 import { db } from "../database/knex";
 import { createContextPayload } from "../helpers/helper";
 
-export const createItem = async (
+export const createItem = async <SchemaType>(
   table: string,
-  payload: any,
+  payload: SchemaType,
   schema: any,
   database: string,
   authContext?: QrudAuthContext

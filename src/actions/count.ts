@@ -16,10 +16,7 @@ export const countItems = async <FilterData>(
     true
   );
 
-  const result = await rawItem(
-    { payload: sqlQuery.replace("*", "count(*)") },
-    database
-  );
+  const result = await rawItem(sqlQuery.replace("*", "count(*)"), database);
 
   return result.records[0].count;
 };

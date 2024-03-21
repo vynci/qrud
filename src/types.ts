@@ -20,21 +20,17 @@ export interface QrudOptions {
 
 export interface QrudInput {
   schema?;
-  table?: string;
+  table: string;
   resourceName?: string;
-  database?: string;
+  database: string;
   options?: QrudOptions;
 }
 
 export interface QrudArgs<SchemaType> {
   id?: string;
   options?: QrudListArgs<SchemaType>;
-  payload?: any;
+  payload?: SchemaType;
   key?: string;
-}
-
-export interface QrudRawArgs {
-  payload: string;
 }
 
 export interface QrudUpdateArgs {

@@ -50,7 +50,7 @@ describe("Qrud [Postgres SQL]", () => {
       database: "krono_aurora_pg",
     });
 
-    const result = await api.gql(event, { auth });
+    const result = await api.appsync(event, { auth });
 
     console.log("result", result);
 

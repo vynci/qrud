@@ -39,3 +39,13 @@ describe("Qrud [Postgres SQL]", () => {
     expect(true).toEqual(true);
   });
 });
+
+const test = {
+  filter: [
+    {
+      field: "organization_id",
+      value: "95a5198e-7d4b-42c6-b19b-82964bcfd33a",
+      operator: "=",
+    },
+  ],
+};

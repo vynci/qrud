@@ -81,7 +81,7 @@ describe("Auth - Qrud [Postgres SQL]", () => {
       database: "krono_aurora_pg",
     });
 
-    const result = await api.gql(event, { auth });
+    const result = await api.appsync(event, { auth });
 
     console.log("[createUserProfile] result", result);
 
@@ -107,7 +107,7 @@ describe("Auth - Qrud [Postgres SQL]", () => {
       database: "krono_aurora_pg",
     });
 
-    const result = await api.gql(event, { auth });
+    const result = await api.appsync(event, { auth });
 
     console.log("[getMyUserProfile] result", result);
 
@@ -136,7 +136,7 @@ describe("Auth - Qrud [Postgres SQL]", () => {
       database: "krono_aurora_pg",
     });
 
-    const result = await api.gql(event, { auth });
+    const result = await api.appsync(event, { auth });
 
     console.log("[updateMyUserProfile] result", result);
 
@@ -162,7 +162,7 @@ describe("Auth - Qrud [Postgres SQL]", () => {
       database: "krono_aurora_pg",
     });
 
-    const result = await api.gql(event, { auth });
+    const result = await api.appsync(event, { auth });
 
     console.log("[deleteMyUserProfile] result", result);
 
