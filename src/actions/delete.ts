@@ -7,11 +7,11 @@ import { db } from "../database/knex";
 
 import { cleanUpIdentifierArray } from "../helpers/helper";
 
-export const deleteItem = async (
+export const deleteItem = async <FilterData>(
   table: string,
-  args: QrudDeleteArgs,
+  args: QrudDeleteArgs<FilterData>,
   database: string,
-  authContext?: QrudAuthContext
+  authContext?: QrudAuthContext<FilterData>
 ) => {
   return new Promise(async (resolve, reject) => {
     const knex = db(database);
@@ -19,15 +19,15 @@ export const deleteItem = async (
     // [1] Setup Conditions
     const tmpConditions = [];
 
-    const initialCondition: Array<QrudContextIdentifiers> = args.id
-      ? [{ field: "id", value: args.id, operator: "=" }]
+    const initialCondition: Array<QrudContextIdentifiers<FilterData>> = args.id
+      ? [{ field: "id" as keyof FilterData, value: args.id, operator: "=" }]
       : args.conditions;
 
     if (authContext) tmpConditions.push(authContext.identifiers);
 
     tmpConditions.push(initialCondition);
 
-    const conditions = cleanUpIdentifierArray(tmpConditions.flat());
+    const conditions = cleanUpIdentifierArray<FilterData>(tmpConditions.flat());
 
     // [2] Build the where statement
     const knexWhere = knex(table).where((builder: any) => {

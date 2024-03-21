@@ -25,9 +25,12 @@ describe("Qrud [Postgres SQL]", () => {
     });
 
     const listResult = await api.list({
-      filter: {
-        organization_id: "95a5198e-7d4b-42c6-b19b-82964bcfd33a",
-      },
+      filter: [
+        {
+          field: "organization_id",
+          value: "95a5198e-7d4b-42c6-b19b-82964bcfd33a",
+        },
+      ],
       search: {
         fields: ["user_profile_full_name", "user_profile_email"],
         value: "%vince%",
@@ -39,13 +42,3 @@ describe("Qrud [Postgres SQL]", () => {
     expect(true).toEqual(true);
   });
 });
-
-const test = {
-  filter: [
-    {
-      field: "organization_id",
-      value: "95a5198e-7d4b-42c6-b19b-82964bcfd33a",
-      operator: "=",
-    },
-  ],
-};

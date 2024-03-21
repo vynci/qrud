@@ -1,11 +1,11 @@
 import { QrudAuthContext } from "../types";
 import { db } from "../database/knex";
 
-export const getItem = async (
+export const getItem = async <SchemaType>(
   table: string,
   argsId: string | number,
   database: string,
-  authContext?: QrudAuthContext
+  authContext?: QrudAuthContext<SchemaType>
 ) => {
   const knex = db(database);
 
@@ -14,8 +14,8 @@ export const getItem = async (
   let operator = "=";
 
   if (authContext?.identifiers?.length) {
-    field = authContext?.identifiers[0]?.field;
-    value = authContext?.identifiers[0]?.value;
+    field = authContext?.identifiers[0]?.field as string;
+    value = authContext?.identifiers[0]?.value as string | number;
   }
 
   return await knex(table).where(field, operator, value).first();

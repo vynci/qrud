@@ -7,26 +7,26 @@ import { db } from "../database/knex";
 
 import { cleanUpIdentifierArray } from "../helpers/helper";
 
-export const updateItem = async (
+export const updateItem = async <FilterData>(
   table: string,
-  args: QrudUpdateArgs,
+  args: QrudUpdateArgs<FilterData>,
   database: string,
-  authContext?: QrudAuthContext
+  authContext?: QrudAuthContext<FilterData>
 ) => {
   const knex = db(database);
 
   // [1] Setup Conditions
   const tmpConditions = [];
 
-  const initialCondition: Array<QrudContextIdentifiers> = args.id
-    ? [{ field: "id", value: args.id, operator: "=" }]
+  const initialCondition: Array<QrudContextIdentifiers<FilterData>> = args.id
+    ? [{ field: "id" as keyof FilterData, value: args.id, operator: "=" }]
     : args.conditions;
 
   if (authContext) tmpConditions.push(authContext.identifiers);
 
   tmpConditions.push(initialCondition);
 
-  const conditions = cleanUpIdentifierArray(tmpConditions.flat());
+  const conditions = cleanUpIdentifierArray<FilterData>(tmpConditions.flat());
 
   // [2] Perform the update
   await knex(table)

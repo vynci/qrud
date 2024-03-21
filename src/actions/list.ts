@@ -1,21 +1,21 @@
-import { QrudAuthContext, QrudListArgs } from "../types";
+import { QrudAuthContext, QrudListArgs, QrudListFilterBetween } from "../types";
 import { db } from "../database/knex";
-import { createContextPayload } from "../helpers/helper";
+import { mergeFilterAndAuthContext } from "../helpers/helper";
 
 export const listItems = async <FilterData>(
   table: string,
   argsOptions: QrudListArgs<FilterData>,
   database: string,
-  authContext?: QrudAuthContext,
+  authContext?: QrudAuthContext<FilterData>,
   isCount: boolean = false
 ) => {
   const search = argsOptions?.search || { fields: [], value: "" };
   const order = JSON.parse(argsOptions?.order || "[]");
-  const authContextPayload = createContextPayload(authContext);
 
-  let filter = argsOptions?.filter || {};
+  let filter = argsOptions?.filter || [];
 
-  filter = { ...filter, ...authContextPayload };
+  if (authContext?.identifiers?.length)
+    mergeFilterAndAuthContext(filter, authContext.identifiers);
 
   const knex = db(database);
 
@@ -23,33 +23,42 @@ export const listItems = async <FilterData>(
 
   query
     .where((builder: any) => {
-      for (const prop in filter) {
-        if (filter[prop].operator) {
-          if (filter[prop].operator === "between") {
-            builder.whereBetween(prop, [
-              filter[prop].value.from,
-              filter[prop].value.to,
+      for (let step = 0; step < filter.length; step++) {
+        if (filter[step].operator) {
+          if (filter[step].operator === "between") {
+            const betweenFilter = filter[step].value as QrudListFilterBetween;
+
+            builder.whereBetween(filter[step].field, [
+              betweenFilter.from,
+              betweenFilter.to,
             ]);
-          } else if (filter[prop].operator === "in") {
-            builder.whereIn(prop, filter[prop].value);
-          } else if (filter[prop].operator === "inArray") {
-            const arrayFilter = filter[prop].value || [];
-            builder.whereRaw(`${prop} && '{${arrayFilter.join(",")}}'`);
-          } else if (filter[prop].operator === "notIn") {
-            builder.whereNotIn(prop, filter[prop].value);
+          } else if (filter[step].operator === "in") {
+            builder.whereIn(filter[step].field, filter[step].value);
+          } else if (filter[step].operator === "inArray") {
+            const arrayFilter = filter[step].value as Array<string | number>;
+
+            builder.whereRaw(
+              `${filter[step].field as string} && '{${arrayFilter.join(",")}}'`
+            );
+          } else if (filter[step].operator === "notIn") {
+            builder.whereNotIn(filter[step].field, filter[step].value);
           } else {
-            if (filter[prop].value !== null) {
-              builder.where(prop, filter[prop].operator, filter[prop].value);
+            if (filter[step].value !== null) {
+              builder.where(
+                filter[step].field,
+                filter[step].operator,
+                filter[step].value
+              );
             } else {
               if (
-                filter[prop].operator === "<>" ||
-                filter[prop].operator === "!="
+                filter[step].operator === "<>" ||
+                filter[step].operator === "!="
               )
-                builder.whereNotNull(prop);
-              else builder.whereNull(prop);
+                builder.whereNotNull(filter[step].field);
+              else builder.whereNull(filter[step].field);
             }
           }
-        } else builder.where(prop, filter[prop]);
+        } else builder.where(filter[step].field, filter[step].value);
       }
     })
     .andWhere((builder: any) => {

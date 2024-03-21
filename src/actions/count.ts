@@ -6,7 +6,7 @@ export const countItems = async <FilterData>(
   table: string,
   argsOptions: QrudListArgs<FilterData>,
   database: string,
-  authContext?: QrudAuthContext
+  authContext?: QrudAuthContext<FilterData>
 ) => {
   const sqlQuery = await listItems(
     table,

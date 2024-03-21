@@ -7,71 +7,91 @@ enum schemaLibrary {
   zod = "zod",
 }
 
-export interface QrudGQLOptions {
+export type QrudGQLOptions = {
   auth?: Function;
   precrud?: Function;
   postcrud?: Function;
-}
+};
 
-export interface QrudOptions {
+export type QrudOptions = {
   schemaLibrary: schemaLibrary;
   databaseType: databaseTypeEnum;
-}
+};
 
-export interface QrudInput {
+export type QrudInput = {
   schema?;
   table: string;
   resourceName?: string;
   database: string;
   options?: QrudOptions;
-}
+};
 
-export interface QrudArgs<SchemaType> {
+export type QrudArgs<SchemaType> = {
   id?: string;
   options?: QrudListArgs<SchemaType>;
   payload?: SchemaType;
   key?: string;
-}
+};
 
-export interface QrudUpdateArgs {
+export type QrudUpdateArgs<FilterData> = {
   id?: string;
-  conditions?: Array<QrudContextIdentifiers>;
+  conditions?: Array<QrudContextIdentifiers<FilterData>>;
   payload?: any;
-}
+};
 
-export interface QrudDeleteArgs {
+export type QrudDeleteArgs<FilterData> = {
   id?: string;
-  conditions?: Array<QrudContextIdentifiers>;
-}
+  conditions?: Array<QrudContextIdentifiers<FilterData>>;
+};
 
-export interface QrudListArgs<FilterData> {
-  filter?: FilterData;
+export type QrudListArgs<FilterData> = {
+  filter?: Array<QrudListFilter<FilterData>>;
   search?: QrudListSearch;
   limit?: number;
   offset?: number;
   order?: string;
-}
+};
 
-export interface QrudListSearch {
+export type QrudListFilter<FilterData> = {
+  field: keyof FilterData;
+  value: string | number | QrudListFilterBetween | Array<string | number>;
+  operator?: QrudListFilterOperatorOptions;
+};
+
+export type QrudListFilterBetween = {
+  from: string | number;
+  to: string | number;
+};
+
+export type QrudListFilterOperatorOptions =
+  | "between"
+  | "in"
+  | "inArray"
+  | "notIn"
+  | "<>"
+  | "<"
+  | ">"
+  | ">="
+  | "<="
+  | "!="
+  | "=";
+
+export type QrudListSearch = {
   fields: Array<string>;
   value: string;
-}
+};
 
-export interface QrudAuthContext {
-  identifiers: Array<QrudContextIdentifiers>;
-}
+export type QrudAuthContext<FilterData> = {
+  identifiers: Array<QrudContextIdentifiers<FilterData>>;
+};
 
-export interface QrudContextIdentifiers {
-  value: string;
-  field: string;
-  operator?: string;
-}
+export type QrudContextIdentifiers<FilterData> = QrudListFilter<FilterData>;
 
-export interface QrudGQLInput<SchemaType> {
+export type QrudGQLInput<SchemaType> = {
   info: QrudGQLInfoInput;
   arguments: QrudArgs<SchemaType>;
-}
+};
 
-export interface QrudGQLInfoInput {
+export type QrudGQLInfoInput = {
   fieldName: string;
-}
+};

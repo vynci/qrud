@@ -1,4 +1,8 @@
-import { QrudContextIdentifiers, QrudAuthContext } from "../types";
+import {
+  QrudContextIdentifiers,
+  QrudListFilter,
+  QrudAuthContext,
+} from "../types";
 
 /**
  * cleanUpIdentifierArray
@@ -8,8 +12,8 @@ import { QrudContextIdentifiers, QrudAuthContext } from "../types";
  * @param items
  * @returns
  */
-export const cleanUpIdentifierArray = (
-  items: Array<QrudContextIdentifiers>
+export const cleanUpIdentifierArray = <FilterData>(
+  items: Array<QrudContextIdentifiers<FilterData>>
 ) => {
   const result = items.filter(
     (value, index, self) =>
@@ -19,7 +23,23 @@ export const cleanUpIdentifierArray = (
   return result;
 };
 
-export const createContextPayload = (authContext: QrudAuthContext) => {
+export const mergeFilterAndAuthContext = <FilterData>(
+  filterArray: Array<QrudListFilter<FilterData>>,
+  authContextIdentifiers: Array<QrudContextIdentifiers<FilterData>>
+) => {
+  authContextIdentifiers.forEach((objB) => {
+    const indexA = filterArray.findIndex((objA) => objA.field === objB.field);
+    if (indexA !== -1) {
+      filterArray[indexA] = objB;
+    } else {
+      filterArray.push(objB);
+    }
+  });
+};
+
+export const createContextPayload = <FilterData>(
+  authContext: QrudAuthContext<FilterData>
+) => {
   let result: any = {};
 
   if (authContext?.identifiers?.length)

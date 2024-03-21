@@ -7,7 +7,7 @@ export const createItem = async <SchemaType>(
   payload: SchemaType,
   schema: any,
   database: string,
-  authContext?: QrudAuthContext
+  authContext?: QrudAuthContext<SchemaType>
 ) => {
   const knex = db(database);
   let result: any;

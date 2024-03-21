@@ -41,19 +41,19 @@ export class Qrud<SchemaType> {
   }
 
   async get(id: string | number) {
-    return await getItem(this.table, id, this.database);
+    return await getItem<SchemaType>(this.table, id, this.database);
   }
 
   async list(options: QrudListArgs<SchemaType>) {
     return await listItems<SchemaType>(this.table, options, this.database);
   }
 
-  async update(args: QrudUpdateArgs) {
-    return await updateItem(this.table, args, this.database);
+  async update(args: QrudUpdateArgs<SchemaType>) {
+    return await updateItem<SchemaType>(this.table, args, this.database);
   }
 
-  async delete(args: QrudDeleteArgs) {
-    return await deleteItem(this.table, args, this.database);
+  async delete(args: QrudDeleteArgs<SchemaType>) {
+    return await deleteItem<SchemaType>(this.table, args, this.database);
   }
 
   async count(options: QrudListArgs<SchemaType>) {
@@ -77,8 +77,7 @@ export class Qrud<SchemaType> {
 
     if (gqlOptions?.auth) authContext = await gqlOptions.auth(input);
 
-    if (args?.options?.filter)
-      args.options.filter = JSON.parse(args.options.filter as string);
+    if (args?.options?.filter) args.options.filter = args.options.filter;
 
     switch (action) {
       case "get":
