@@ -19,18 +19,22 @@ export interface QrudOptions {
 }
 
 export interface QrudInput {
-  schema?: any;
+  schema?;
   table?: string;
   resourceName?: string;
   database?: string;
   options?: QrudOptions;
 }
 
-export interface QrudArgs {
+export interface QrudArgs<SchemaType> {
   id?: string;
-  options?: QrudListArgs;
+  options?: QrudListArgs<SchemaType>;
   payload?: any;
   key?: string;
+}
+
+export interface QrudRawArgs {
+  payload: string;
 }
 
 export interface QrudUpdateArgs {
@@ -44,11 +48,17 @@ export interface QrudDeleteArgs {
   conditions?: Array<QrudContextIdentifiers>;
 }
 
-export interface QrudListArgs {
-  filter?: string;
+export interface QrudListArgs<FilterData> {
+  filter?: FilterData;
+  search?: QrudListSearch;
   limit?: number;
   offset?: number;
   order?: string;
+}
+
+export interface QrudListSearch {
+  fields: Array<string>;
+  value: string;
 }
 
 export interface QrudAuthContext {
@@ -61,9 +71,9 @@ export interface QrudContextIdentifiers {
   operator?: string;
 }
 
-export interface QrudGQLInput {
+export interface QrudGQLInput<SchemaType> {
   info: QrudGQLInfoInput;
-  arguments: QrudArgs;
+  arguments: QrudArgs<SchemaType>;
 }
 
 export interface QrudGQLInfoInput {

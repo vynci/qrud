@@ -2,17 +2,18 @@ import { QrudAuthContext, QrudListArgs } from "../types";
 import { db } from "../database/knex";
 import { createContextPayload } from "../helpers/helper";
 
-export const listItems = async (
+export const listItems = async <FilterData>(
   table: string,
-  argsOptions: QrudListArgs,
+  argsOptions: QrudListArgs<FilterData>,
   database: string,
   authContext?: QrudAuthContext,
   isCount: boolean = false
 ) => {
+  const search = argsOptions?.search || { fields: [], value: "" };
   const order = JSON.parse(argsOptions?.order || "[]");
   const authContextPayload = createContextPayload(authContext);
 
-  let filter = JSON.parse(argsOptions?.filter || "{}");
+  let filter = argsOptions?.filter || {};
 
   filter = { ...filter, ...authContextPayload };
 
@@ -38,25 +39,7 @@ export const listItems = async (
             builder.whereNotIn(prop, filter[prop].value);
           } else {
             if (filter[prop].value !== null) {
-              if (filter[prop].logic === "or")
-                builder.orWhere(
-                  prop,
-                  filter[prop].operator,
-                  filter[prop].value
-                );
-              else {
-                if (filter[prop].format === "json") {
-                  builder.whereRaw(
-                    `${prop}->>'${filter[prop].value.jkey}' ${filter[prop].operator} ?`,
-                    [`${filter[prop].value.jvalue}`]
-                  );
-                } else
-                  builder.where(
-                    prop,
-                    filter[prop].operator,
-                    filter[prop].value
-                  );
-              }
+              builder.where(prop, filter[prop].operator, filter[prop].value);
             } else {
               if (
                 filter[prop].operator === "<>" ||
@@ -67,6 +50,11 @@ export const listItems = async (
             }
           }
         } else builder.where(prop, filter[prop]);
+      }
+    })
+    .andWhere((builder: any) => {
+      for (let step = 0; step < search.fields.length; step++) {
+        builder.orWhereILike(search.fields[step], search.value);
       }
     })
     .limit(argsOptions?.limit || null)

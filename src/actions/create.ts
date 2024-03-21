@@ -1,4 +1,4 @@
-import { QrudArgs, QrudAuthContext } from "../types";
+import { QrudAuthContext } from "../types";
 import { db } from "../database/knex";
 import { createContextPayload } from "../helpers/helper";
 

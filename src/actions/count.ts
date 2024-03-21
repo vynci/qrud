@@ -2,9 +2,9 @@ import { QrudListArgs, QrudAuthContext } from "../types";
 import { listItems } from "./list";
 import { rawItem } from "./raw";
 
-export const countItems = async (
+export const countItems = async <FilterData>(
   table: string,
-  argsOptions: QrudListArgs,
+  argsOptions: QrudListArgs<FilterData>,
   database: string,
   authContext?: QrudAuthContext
 ) => {

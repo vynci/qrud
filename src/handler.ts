@@ -1,9 +1,10 @@
 import { dotCase } from "change-case";
+import { z } from "zod";
 import {
   QrudGQLInput,
   QrudInput,
   QrudOptions,
-  QrudArgs,
+  QrudRawArgs,
   QrudDeleteArgs,
   QrudUpdateArgs,
   QrudListArgs,
@@ -18,8 +19,8 @@ import { deleteItem } from "./actions/delete";
 import { rawItem } from "./actions/raw";
 import { countItems } from "./actions/count";
 
-export class Qrud {
-  schema: any;
+export class Qrud<SchemaType> {
+  schema;
   table: string;
   database?: string;
   options?: QrudOptions;
@@ -45,11 +46,11 @@ export class Qrud {
     return await getItem(table, id, database);
   }
 
-  async list(options: QrudListArgs) {
+  async list(options: QrudListArgs<SchemaType>) {
     const table: string = this.table;
     const database = this.database || "";
 
-    return await listItems(table, options, database);
+    return await listItems<SchemaType>(table, options, database);
   }
 
   async update(args: QrudUpdateArgs) {
@@ -66,31 +67,33 @@ export class Qrud {
     return await deleteItem(table, args, database);
   }
 
-  async count(options: QrudListArgs) {
+  async count(options: QrudListArgs<SchemaType>) {
     const table: string = this.table;
     const database = this.database || "";
 
-    return await countItems(table, options, database);
+    return await countItems<SchemaType>(table, options, database);
   }
 
-  async raw(args: QrudArgs) {
-    const table: string = this.table;
+  async raw(args: QrudRawArgs) {
     const database = this.database || "";
 
     return rawItem(args, database);
   }
 
-  async gql(input: QrudGQLInput, gqlOptions?: QrudGQLOptions) {
+  async gql(input: QrudGQLInput<SchemaType>, gqlOptions?: QrudGQLOptions) {
     const table: string = this.table;
     const database = this.database || "";
     const action = dotCase(input.info.fieldName).split(".")[0];
-    const args = input.arguments;
+    let args = input.arguments;
 
     let authContext = null;
 
     if (gqlOptions?.precrud) input = await gqlOptions.precrud(input);
 
     if (gqlOptions?.auth) authContext = await gqlOptions.auth(input);
+
+    if (args?.options?.filter)
+      args.options.filter = JSON.parse(args.options.filter as string);
 
     let result;
 
@@ -118,9 +121,6 @@ export class Qrud {
         break;
       case "count":
         result = await countItems(table, args.options, database, authContext);
-        break;
-      case "raw":
-        result = await rawItem(args, database);
         break;
       default:
         throw new Error("InvalidGQLAction");
