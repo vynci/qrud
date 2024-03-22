@@ -49,12 +49,23 @@ export type QrudListArgs<FilterData> = {
   search?: QrudListSearch;
   limit?: number;
   offset?: number;
-  order?: string;
+  order?: Array<QrudListSort<FilterData>>;
+};
+
+export type QrudListSort<FilterData> = {
+  column: keyof FilterData;
+  order: QrudListOrderOptions;
 };
 
 export type QrudListFilter<FilterData> = {
   field: keyof FilterData;
-  value: string | number | QrudListFilterBetween | Array<string | number>;
+  value:
+    | string
+    | number
+    | QrudListFilterBetween
+    | Array<string | number>
+    | boolean
+    | null;
   operator?: QrudListFilterOperatorOptions;
 };
 
@@ -62,6 +73,8 @@ export type QrudListFilterBetween = {
   from: string | number;
   to: string | number;
 };
+
+export type QrudListOrderOptions = "asc" | "desc";
 
 export type QrudListFilterOperatorOptions =
   | "between"

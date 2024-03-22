@@ -1,6 +1,6 @@
 {
   "name": "qrud",
-  "version": "1.0.20",
+  "version": "1.0.22",
   "main": "index.js",
   "description": "An opinionated crud library for serverless functions",
   "scripts": {

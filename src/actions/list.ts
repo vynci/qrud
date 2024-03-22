@@ -10,7 +10,7 @@ export const listItems = async <FilterData>(
   isCount: boolean = false
 ) => {
   const search = argsOptions?.search || { fields: [], value: "" };
-  const order = JSON.parse(argsOptions?.order || "[]");
+  const order = argsOptions?.order || [];
 
   let filter = argsOptions?.filter || [];
 
