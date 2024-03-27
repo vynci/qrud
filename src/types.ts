@@ -108,3 +108,7 @@ export type QrudGQLInput<SchemaType> = {
 export type QrudGQLInfoInput = {
   fieldName: string;
 };
+
+export type DeleteResponse = {
+  id?: string;
+};

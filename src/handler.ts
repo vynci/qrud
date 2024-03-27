@@ -1,4 +1,5 @@
 import { dotCase } from "change-case";
+import { DeleteResponse } from "./types";
 
 import {
   QrudGQLInput,
@@ -40,27 +41,27 @@ export class Qrud<SchemaType> {
     );
   }
 
-  async get(id: string | number) {
+  async get(id: string | number): Promise<SchemaType> {
     return await getItem<SchemaType>(this.table, id, this.database);
   }
 
-  async list(options: QrudListArgs<SchemaType>) {
+  async list(options: QrudListArgs<SchemaType>): Promise<Array<SchemaType>> {
     return await listItems<SchemaType>(this.table, options, this.database);
   }
 
-  async update(args: QrudUpdateArgs<SchemaType>) {
+  async update(args: QrudUpdateArgs<SchemaType>): Promise<SchemaType> {
     return await updateItem<SchemaType>(this.table, args, this.database);
   }
 
-  async delete(args: QrudDeleteArgs<SchemaType>) {
+  async delete(args: QrudDeleteArgs<SchemaType>): Promise<DeleteResponse> {
     return await deleteItem<SchemaType>(this.table, args, this.database);
   }
 
-  async count(options: QrudListArgs<SchemaType>) {
+  async count(options: QrudListArgs<SchemaType>): Promise<number> {
     return await countItems<SchemaType>(this.table, options, this.database);
   }
 
-  async raw(sqlQuery: string) {
+  async raw(sqlQuery: string): Promise<any> {
     return rawItem(sqlQuery, this.database);
   }
 
