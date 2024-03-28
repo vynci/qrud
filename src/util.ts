@@ -38,3 +38,24 @@ export const getAuthToken = (event: any) => {
 
   return token;
 };
+
+export const sendHTTPSuccess = (body: any) => {
+  return createResponse(200, body);
+};
+
+export const sendHTTPError = (body: any, code: number = 500) => {
+  return createResponse(code, body);
+};
+
+const createResponse = (statusCode: number, body: any) => {
+  const response = {
+    statusCode: statusCode,
+    body: JSON.stringify(body),
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Credentials": true,
+    },
+  };
+  return response;
+};
