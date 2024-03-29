@@ -16,17 +16,18 @@ export const updateItem = async <FilterData>(
   const knex = db(database);
 
   // [1] Setup Conditions
-  const tmpConditions = [];
+  const argsConditions = args.conditions || [];
+  const stageConditions = [];
 
   const initialCondition: Array<QrudContextIdentifiers<FilterData>> = args.id
     ? [{ field: "id" as keyof FilterData, value: args.id, operator: "=" }]
-    : args.conditions;
+    : argsConditions;
 
-  if (authContext) tmpConditions.push(authContext.identifiers);
+  if (authContext) stageConditions.push(authContext.identifiers);
 
-  tmpConditions.push(initialCondition);
+  stageConditions.push(initialCondition);
 
-  const conditions = cleanUpIdentifierArray<FilterData>(tmpConditions.flat());
+  const conditions = cleanUpIdentifierArray<FilterData>(stageConditions.flat());
 
   // [2] Perform the update
   await knex(table)
